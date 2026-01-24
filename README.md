@@ -1,18 +1,5 @@
-## Getting Started
+# SmartGroceryCLI
 
-Welcome to the VS Code Java world. Here is a guideline to help you get started to write Java code in Visual Studio Code.
+Smart Grocery CLI is an offline, command-line based grocery management application designed to simplify inventory operations for small grocery shops. The system provides product management, user accounts, checkout functionality, recommendations, and analytics — all through a clean and structured CLI interface.
 
-## Folder Structure
-
-The workspace contains two folders by default, where:
-
-- `src`: the folder to maintain sources
-- `lib`: the folder to maintain dependencies
-
-Meanwhile, the compiled output files will be generated in the `bin` folder by default.
-
-> If you want to customize the folder structure, open `.vscode/settings.json` and update the related settings there.
-
-## Dependency Management
-
-The `JAVA PROJECTS` view allows you to manage your dependencies. More details can be found [here](https://github.com/microsoft/vscode-java-dependency#manage-dependencies).
+This project replaces traditional manual stock-keeping and paper-based purchase tracking with a digital file-based solution. Through a modular Java OOP architecture, the system ensures organized data management, easy product handling, secure authentication, and automated billing. Since the system is fully offline and uses file storage, it is suitable for small stores that do not rely on internet-based applications.
