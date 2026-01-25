@@ -4,6 +4,7 @@ import com.smartgrocery.auth.AuthenticationManager;
 import com.smartgrocery.auth.UserRole;
 import com.smartgrocery.models.Product;
 import com.smartgrocery.inventory.Inventory;
+import com.smartgrocery.shopping.Cart;
 import com.smartgrocery.models.User;
 import com.smartgrocery.storage.FileManager;
 
@@ -15,6 +16,7 @@ public class CLI {
     private Scanner scanner;
     private AuthenticationManager authManager;
     private Inventory inventory;
+    private Cart cart;
     private User currentUser;
 
     public CLI() {
@@ -222,7 +224,7 @@ public class CLI {
         }
     }
 
-     private void browseProducts() {
+       private void browseProducts() {
         List<Product> products = inventory.getAllProducts();
         System.out.println("\n--- Product List ---");
         printProductTable(products);
