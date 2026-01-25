@@ -212,7 +212,7 @@ public class CLI {
             
             String choice = scanner.nextLine();
             switch (choice) {
-                case "1": System.out.println("product list"); break;
+                case "1": browseProducts(); break;
                 case "2": System.out.println("show cart");; break;
                 case "3": System.out.println("show recommendations"); break;
                 case "4": System.out.println("show history"); break ;
@@ -221,6 +221,31 @@ public class CLI {
             }
         }
     }
+
+     private void browseProducts() {
+        List<Product> products = inventory.getAllProducts();
+        System.out.println("\n--- Product List ---");
+        printProductTable(products);
+
+        System.out.print("Enter product name to add to cart (or press Enter to cancel): ");
+        String pName = scanner.nextLine();
+        if (pName.trim().isEmpty()) return;
+        
+        Product selected = inventory.searchProduct(pName);
+        if (selected != null) {
+            System.out.print("Enter quantity: ");
+            try {
+                int qty = Integer.parseInt(scanner.nextLine());
+                cart.addItem(selected, qty);
+                System.out.println("Added to cart.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid quantity.");
+            }
+        } else {
+             System.out.println("Product not found.");
+        }
+    }
+    
 
 
     private void printProductTable(List<Product> products) {
