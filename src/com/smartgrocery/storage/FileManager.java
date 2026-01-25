@@ -1,16 +1,51 @@
 package com.smartgrocery.storage;
 
 import com.smartgrocery.auth.UserRole;
+import com.smartgrocery.models.Product;
 import com.smartgrocery.models.User;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class FileManager {
     private static final String USERS_FILE = "data/users/users.txt";
+    private static final String PRODUCTS_FILE = "data/inventory/products.txt";
+    private static final String PURCHASES_FILE = "data/transactions/purchases.txt";
 
+    public List<Product> loadProducts() {
+        List<Product> products = new ArrayList<>();
+        File file = new File(PRODUCTS_FILE);
+        if (!file.exists()) return products;
+
+        try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                String[] parts = line.split(",");
+                if (parts.length == 4) {
+                    String name = parts[0];
+                    String category = parts[1];
+                    double price = Double.parseDouble(parts[2]);
+                    int stock = Integer.parseInt(parts[3]);
+                    products.add(new Product(name, category, price, stock));
+                }
+            }
+        } catch (IOException e) {
+            System.err.println("Error loading products: " + e.getMessage());
+        }
+        return products;
+    }
+
+    public void saveProducts(List<Product> products) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(PRODUCTS_FILE))) {
+            for (Product p : products) {
+                bw.write(p.getName() + "," + p.getCategory() + "," + p.getPrice() + "," + p.getStock());
+                bw.newLine();
+            }
+        } catch (IOException e) {
+            System.err.println("Error saving products: " + e.getMessage());
+        }
+    }
 
     public List<User> loadUsers() {
         List<User> users = new ArrayList<>();
@@ -44,5 +79,7 @@ public class FileManager {
             System.err.println("Error saving users: " + e.getMessage());
         }
     }
+
+    
 
 }

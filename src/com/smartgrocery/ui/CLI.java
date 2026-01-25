@@ -2,6 +2,9 @@ package com.smartgrocery.ui;
 
 import com.smartgrocery.auth.AuthenticationManager;
 import com.smartgrocery.auth.UserRole;
+import com.smartgrocery.models.Product;
+import com.smartgrocery.inventory.Inventory;
+import com.smartgrocery.shopping.Cart;
 import com.smartgrocery.models.User;
 import com.smartgrocery.storage.FileManager;
 
@@ -12,12 +15,15 @@ import java.util.Scanner;
 public class CLI {
     private Scanner scanner;
     private AuthenticationManager authManager;
+    private Inventory inventory;
+    private Cart cart;
     private User currentUser;
 
     public CLI() {
         FileManager fileManager = new FileManager();
         this.scanner = new Scanner(System.in);
         this.authManager = new AuthenticationManager(fileManager);
+        this.inventory = new Inventory(fileManager);
         
     }
 
@@ -86,7 +92,7 @@ public class CLI {
             
             String choice = scanner.nextLine();
             switch (choice) {
-                case "1": System.out.println("manage inventory"); break;
+                case "1": manageInventory(); break;
                 case "2": manageUsers(); break;
                 case "3": System.out.println("view report"); break;
                 case "4": currentUser = null; return;
@@ -94,6 +100,74 @@ public class CLI {
             }
         }
     }
+
+
+     private void manageInventory() {
+        while (true) {
+            System.out.println("\n--- Inventory Management ---");
+            System.out.println("1. View All Products");
+            System.out.println("2. Add Product");
+            System.out.println("3. Update Stock & Price");
+            System.out.println("4. Remove Product");
+            System.out.println("5. Back to Admin Menu");
+            
+            String choice = scanner.nextLine();
+            switch (choice) {
+                case "1": 
+                    printProductTable(inventory.getAllProducts());
+                    break;
+                case "2":
+                    System.out.print("Name (or press Enter to cancel): ");
+                    String name = scanner.nextLine();
+                    if (name.trim().isEmpty()) {
+                        System.out.println("Operation cancelled.");
+                        break;
+                    }
+                    System.out.print("Category: ");
+                    String cat = scanner.nextLine();
+                    System.out.print("Price: ");
+                    double price = Double.parseDouble(scanner.nextLine());
+                    System.out.print("Stock: ");
+                    int stock = Integer.parseInt(scanner.nextLine());
+                    inventory.addProduct(new Product(name, cat, price, stock));
+                    System.out.println("Product Added.");
+                    break;
+                case "3":
+                    System.out.print("Product Name: ");
+                    String pName = scanner.nextLine();
+                    Product p = inventory.searchProduct(pName);
+                    if (p != null) {
+                        System.out.println("Current Stock: " + p.getStock() + ", Price: " + p.getPrice());
+                        
+                        System.out.print("Quantity to Add (negative to reduce, 0 to skip): ");
+                        int qty = Integer.parseInt(scanner.nextLine());
+                        inventory.updateProductStock(pName, qty);
+                        
+                        System.out.print("New Price (-1 to keep current): ");
+                        double newPrice = Double.parseDouble(scanner.nextLine());
+                        if (newPrice >= 0) {
+                            inventory.updateProductPrice(pName, newPrice);
+                        }
+                        System.out.println("Product updated.");
+                    } else {
+                        System.out.println("Product not found.");
+                    }
+                    break;
+                case "4":
+                    System.out.print("Enter product name to remove: ");
+                    String delName = scanner.nextLine();
+                    if (inventory.deleteProduct(delName)) {
+                        System.out.println("Product removed successfully.");
+                    } else {
+                        System.out.println("Product not found.");
+                    }
+                    break;
+                case "5": return;
+                default: System.out.println("Invalid choice.");
+            }
+        }
+    }
+
 
 
     private void manageUsers() {
@@ -140,13 +214,47 @@ public class CLI {
             
             String choice = scanner.nextLine();
             switch (choice) {
-                case "1": System.out.println("product list"); break;
+                case "1": browseProducts(); break;
                 case "2": System.out.println("show cart");; break;
                 case "3": System.out.println("show recommendations"); break;
                 case "4": System.out.println("show history"); break ;
                 case "5": currentUser = null; return;
                 default: System.out.println("Invalid choice.");
             }
+        }
+    }
+
+       private void browseProducts() {
+        List<Product> products = inventory.getAllProducts();
+        System.out.println("\n--- Product List ---");
+        printProductTable(products);
+
+        System.out.print("Enter product name to add to cart (or press Enter to cancel): ");
+        String pName = scanner.nextLine();
+        if (pName.trim().isEmpty()) return;
+        
+        Product selected = inventory.searchProduct(pName);
+        if (selected != null) {
+            System.out.print("Enter quantity: ");
+            try {
+                int qty = Integer.parseInt(scanner.nextLine());
+                cart.addItem(selected, qty);
+                System.out.println("Added to cart.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid quantity.");
+            }
+        } else {
+             System.out.println("Product not found.");
+        }
+    }
+    
+
+
+    private void printProductTable(List<Product> products) {
+        System.out.printf("%-20s %-15s %-10s %-10s\n", "Name", "Category", "Price", "Stock");
+        System.out.println("-----------------------------------------------------------");
+        for (Product p : products) {
+            System.out.printf("%-20s %-15s $%-9.2f %-10d\n", p.getName(), p.getCategory(), p.getPrice(), p.getStock());
         }
     }
   
