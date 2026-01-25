@@ -2,11 +2,13 @@ package com.smartgrocery.storage;
 
 import com.smartgrocery.auth.UserRole;
 import com.smartgrocery.models.Product;
+import com.smartgrocery.models.Purchase;
 import com.smartgrocery.models.User;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class FileManager {
     private static final String USERS_FILE = "data/users/users.txt";
@@ -77,6 +79,27 @@ public class FileManager {
             }
         } catch (IOException e) {
             System.err.println("Error saving users: " + e.getMessage());
+        }
+    }
+
+
+    public void savePurchase(Purchase purchase, User user) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(PURCHASES_FILE, true))) {
+            StringBuilder sb = new StringBuilder();
+            sb.append(user.getUsername()).append(";")
+              .append(purchase.getTimestamp().toString()).append(";")
+              .append(purchase.getTotalAmount()).append(";");
+            
+            int i = 0;
+            for (Map.Entry<Product, Integer> entry : purchase.getItems().entrySet()) {
+                sb.append(entry.getKey().getName()).append(":").append(entry.getValue());
+                if (i < purchase.getItems().size() - 1) sb.append("|");
+                i++;
+            }
+            bw.write(sb.toString());
+            bw.newLine();
+        } catch (IOException e) {
+            System.err.println("Error saving purchase: " + e.getMessage());
         }
     }
 

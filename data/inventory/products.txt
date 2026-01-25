@@ -9,3 +9,5 @@ Chips,Snacks,1.5,100
 Coke,Beverages,1.0,100
 Carrot,Vegetables,0.5,200
 Orange,fruit,3.0,130
+cheese ,dairy,2.0,49
+cheese,dairy,4.0,64

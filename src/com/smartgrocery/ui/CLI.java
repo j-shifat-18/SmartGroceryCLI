@@ -24,6 +24,7 @@ public class CLI {
         this.scanner = new Scanner(System.in);
         this.authManager = new AuthenticationManager(fileManager);
         this.inventory = new Inventory(fileManager);
+        this.cart = new Cart();
         
     }
 
