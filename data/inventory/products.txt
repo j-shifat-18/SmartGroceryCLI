@@ -1,13 +1,3 @@
-Apple,Fruits,1.5,105
-Banana,Fruits,0.8,150
-Milk,Dairy,2.5,45
-Bread,Bakery,1.2,40
-Eggs,Dairy,3.0,60
-Chicken,Meat,5.5,30
-Rice,Grains,4.0,80
-Chips,Snacks,1.5,100
-Coke,Beverages,1.0,100
-Carrot,Vegetables,0.5,200
-Orange,fruit,3.0,130
-cheese ,dairy,2.0,49
-cheese,dairy,4.0,64
+5e8fc944,Apple,dadb2106,a62d9d34,8.0,230
+df19dd25,Milk,2f8080ca,b8d987d9,7.0,25
+20072662,Orange,dadb2106,2ad4dba9,3.0,322

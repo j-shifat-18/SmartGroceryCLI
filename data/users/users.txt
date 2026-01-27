@@ -4,3 +4,4 @@ shifat,shifat123,CUSTOMER
 shifat2,shifat2,ADMIN
 shifat3,shifat3,CUSTOMER
 arafat1,arafat1,ADMIN
+jeni,Jeni123,CUSTOMER
