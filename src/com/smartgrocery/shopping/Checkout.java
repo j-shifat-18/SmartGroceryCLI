@@ -24,7 +24,7 @@ public class Checkout {
         for (Map.Entry<Product, Integer> entry : cart.getItems().entrySet()) {
             Product cartProduct = entry.getKey();
             int qty = entry.getValue();
-            Product inventoryProduct = inventory.searchProduct(cartProduct.getName());
+            Product inventoryProduct = inventory.getProductById(cartProduct.getId());
             
             if (inventoryProduct == null || inventoryProduct.getStock() < qty) {
                 System.out.println("Checkout Failed: Insufficient stock for " + cartProduct.getName());
@@ -32,12 +32,12 @@ public class Checkout {
             }
         }
 
-        // 2. Process Transaction 
+        // 2. Process Transaction (Deduct Stock)
         for (Map.Entry<Product, Integer> entry : cart.getItems().entrySet()) {
             Product p = entry.getKey();
             int qty = entry.getValue();
             // Deduct stock (negative quantity)
-            inventory.updateProductStock(p.getName(), -qty);
+            inventory.updateProductStockById(p.getId(), -qty);
         }
 
         // 3. Generate Purchase Record

@@ -26,13 +26,29 @@ public class AuthenticationManager {
     public boolean register(String username, String password, UserRole role) {
         for (User user : users) {
             if (user.getUsername().equals(username)) {
-                return false; // Username already exists
+                return false;
             }
         }
+        
+        // Password validation
+        if (!isValidPassword(password)) {
+            return false; 
+        }
+        
         User newUser = new User(username, password, role);
         users.add(newUser);
         fileManager.saveUsers(users);
         return true;
+    }
+    
+    public boolean isValidPassword(String password) {
+        // Password must be at least 6 characters long and contain at least one uppercase letter and at least one digit 
+        String passwordRegex = "^(?=.*[A-Z])(?=.*\\d).{6,}$";
+        return password.matches(passwordRegex);
+    }
+    
+    public String getPasswordRequirements() {
+        return "Password must be at least 6 characters long and contain at least one uppercase letter and at least one digit.";
     }
     
     public List<User> getAllUsers() {
