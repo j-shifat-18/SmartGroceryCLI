@@ -80,7 +80,6 @@ data/
 - **Password Hashing**: Industry-standard SHA-256 with random salt
 - **Session Management**: Secure user context handling
 - **Audit Logging**: Comprehensive activity tracking
-- **Input Validation**: SQL injection and XSS prevention
 - **Error Handling**: Secure error messages without information leakage
 
 ### **Performance Optimizations**

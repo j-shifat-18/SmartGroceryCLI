@@ -1,3 +1,4 @@
 dadb2106,Fruit,KG
 2f8080ca,Dairy,LITER
 ab4a8de2,Meat,KG
+34073e6f,Spice,KG

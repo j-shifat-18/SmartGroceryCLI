@@ -31,3 +31,8 @@
 [2026-01-28 11:04:53] STARTUP | SYSTEM | SmartGrocery CLI application started
 [2026-01-28 11:05:00] LOGIN | admin | User logged in with role: ADMIN
 [2026-01-28 11:06:46] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 12:16:29] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 12:16:45] REGISTER | didar | New user registered
+[2026-01-28 12:16:55] LOGIN | didar | User logged in with role: CUSTOMER
+[2026-01-28 12:18:26] LOGOUT | didar | User logged out
+[2026-01-28 12:18:34] LOGIN | admin | User logged in with role: ADMIN

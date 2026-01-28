@@ -1,4 +1,6 @@
 5e8fc944,Apple,dadb2106,a62d9d34,10.0,357
 df19dd25,Milk,2f8080ca,b8d987d9,7.0,25
 20072662,Orange,dadb2106,2ad4dba9,3.0,322
-0fab0f0b,Apple,dadb2106,c8f9c053,9.0,980
+0fab0f0b,Apple,dadb2106,c8f9c053,9.0,911
+dcbcbea4,Beef,ab4a8de2,a948f124,2.0,100
+67d22a12,Cumin,34073e6f,a948f124,0.5,789
