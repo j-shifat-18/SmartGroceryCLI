@@ -1,0 +1,13 @@
+[2026-01-27 22:47:28] PASSWORD_MIGRATION | SYSTEM | Migrated password to hashed format for user: admin
+[2026-01-27 22:47:28] PASSWORD_MIGRATION | SYSTEM | Migrated password to hashed format for user: customer
+[2026-01-27 22:47:28] PASSWORD_MIGRATION | SYSTEM | Migrated password to hashed format for user: shifat
+[2026-01-27 22:47:28] PASSWORD_MIGRATION | SYSTEM | Migrated password to hashed format for user: shifat2
+[2026-01-27 22:47:28] PASSWORD_MIGRATION | SYSTEM | Migrated password to hashed format for user: shifat3
+[2026-01-27 22:47:28] PASSWORD_MIGRATION | SYSTEM | Migrated password to hashed format for user: arafat1
+[2026-01-27 22:47:28] PASSWORD_MIGRATION | SYSTEM | Migrated password to hashed format for user: jeni
+[2026-01-27 22:47:28] MIGRATION_COMPLETE | SYSTEM | All passwords migrated to hashed format
+[2026-01-27 22:48:12] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-27 22:48:24] LOGIN | jeni | User logged in with role: CUSTOMER
+[2026-01-27 22:58:16] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-27 22:58:25] LOGIN | jeni | User logged in with role: CUSTOMER
+[2026-01-27 22:58:32] LOGOUT | jeni | User logged out

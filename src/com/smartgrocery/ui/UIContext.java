@@ -6,6 +6,7 @@ import com.smartgrocery.models.User;
 import com.smartgrocery.shopping.Cart;
 import com.smartgrocery.shopping.Checkout;
 
+
 import java.util.Scanner;
 
 /**
@@ -18,6 +19,7 @@ public class UIContext {
     private final Cart cart;
     private final Checkout checkout;
     private User currentUser;
+    private AuthUI authUI;
 
     public UIContext(Scanner scanner, AuthenticationManager authManager, Inventory inventory, 
                     Cart cart, Checkout checkout) {
@@ -26,6 +28,7 @@ public class UIContext {
         this.inventory = inventory;
         this.cart = cart;
         this.checkout = checkout;
+        this.authUI = new AuthUI(this);
       
     }
 
@@ -36,6 +39,7 @@ public class UIContext {
     public Cart getCart() { return cart; }
     public Checkout getCheckout() { return checkout; }
     public User getCurrentUser() { return currentUser; }
+    public AuthUI getAuthUI() { return authUI; }
     
     // Setters
     public void setCurrentUser(User user) { this.currentUser = user; }

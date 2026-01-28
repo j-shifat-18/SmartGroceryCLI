@@ -35,7 +35,7 @@ public class CustomerUI extends BaseUI {
                 case "4": System.out.println("Feature comming soon!");; break;
                 case "5": viewHistory(); break;
                 case "6": 
-                    context.setCurrentUser(null);
+                    context.getAuthUI().logout();
                     context.getCart().clearCart();
                     return;
                 default: System.out.println("Invalid choice.");

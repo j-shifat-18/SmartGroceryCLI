@@ -2,6 +2,7 @@ package com.smartgrocery.ui;
 
 import com.smartgrocery.auth.UserRole;
 import com.smartgrocery.models.User;
+import com.smartgrocery.utils.ActivityLogger;
 
 /**
  * Handles authentication-related UI operations
@@ -52,6 +53,17 @@ public class AuthUI extends BaseUI {
         } else {
             System.out.println("Username already exists.");
             return false;
+        }
+    }
+
+
+    public void logout() {
+        if (context.getCurrentUser() != null) {
+            String username = context.getCurrentUser().getUsername();
+            ActivityLogger.logLogout(username);
+            System.out.println("Goodbye, " + username + "!");
+            context.setCurrentUser(null);
+            context.getCart().clearCart();
         }
     }
 }

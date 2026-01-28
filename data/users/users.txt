@@ -1,7 +1,7 @@
-admin,admin123,ADMIN
-customer,pass123,CUSTOMER
-shifat,shifat123,CUSTOMER
-shifat2,shifat2,ADMIN
-shifat3,shifat3,CUSTOMER
-arafat1,arafat1,ADMIN
-jeni,Jeni123,CUSTOMER
+admin,YxYl/4f1jy83ifZWuEr6Lw==:YVBroWPX4RiYPeZbexIRmIrP+bL5qKWWy2ce4fCCr+s=,ADMIN
+customer,KPhSwpQYXgkLWUtuQSP8EA==:xNCsGUuoqf/knZNef3Bv4Ig9xhsM4tWb0w3Q8ajM/mE=,CUSTOMER
+shifat,iyBWYokSw8fn7w6uZo2uww==:VkJydjZ3/g4tQUrLs3DKFIs1uXC8kdmG9Raxo9A1K/c=,CUSTOMER
+shifat2,/Sd2hpv3n4SfD24lwMEKog==:9stHhp7K8NCR7shbkip9POAqVNjwbBnrppGbi6e7T+8=,ADMIN
+shifat3,y1cuXq+YlMlk1PClmeoHJw==:pEGTetZgvFDMx+PITVZbJyiXD1yXRnfQuZybzw/utZE=,CUSTOMER
+arafat1,zM7V3et8dca7JEd+wNq7jg==:wHTVd0T/DzojB8AquHMPLay4ZB+KUyGvvMHrnBPJDnY=,ADMIN
+jeni,ky+mcaKK53S4X/G9ey9lDA==:vmHkg/JsuIBfRH3bLUgf/mA2+2vClbNfV54513jmfmQ=,CUSTOMER

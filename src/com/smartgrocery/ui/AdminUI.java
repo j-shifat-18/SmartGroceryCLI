@@ -28,7 +28,7 @@ public class AdminUI extends BaseUI {
                 case "2": manageUsers(); break;
                 case "3": System.out.println("Feature comming soon!");; break;
                 case "4": 
-                    context.setCurrentUser(null);
+                    context.getAuthUI().logout();
                     return;
                 default: System.out.println("Invalid choice.");
             }

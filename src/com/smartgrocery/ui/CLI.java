@@ -7,6 +7,7 @@ import com.smartgrocery.models.User;
 import com.smartgrocery.shopping.Cart;
 import com.smartgrocery.shopping.Checkout;
 import com.smartgrocery.storage.FileManager;
+import com.smartgrocery.utils.ActivityLogger;
 
 import java.util.Scanner;
 
@@ -17,6 +18,9 @@ public class CLI {
     private final CustomerUI customerUI;
 
     public CLI() {
+         
+        ActivityLogger.logSystemEvent("STARTUP", "SmartGrocery CLI application started");
+        
         // Initialize core components
         FileManager fileManager = new FileManager();
         Scanner scanner = new Scanner(System.in);
