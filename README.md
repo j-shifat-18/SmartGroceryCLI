@@ -239,10 +239,6 @@ java -cp src com.smartgrocery.ui.CLI
 - [ ] Real-time notifications
 - [ ] Advanced analytics dashboard
 
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - **Java Community**: For excellent documentation and libraries
