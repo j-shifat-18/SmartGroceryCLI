@@ -17,22 +17,24 @@ public class InventoryUI extends BaseUI {
         while (true) {
             System.out.println("\n--- Inventory Management ---");
             System.out.println("1. View All Products");
-            System.out.println("2. Add Product");
-            System.out.println("3. Manage Categories");
-            System.out.println("4. Manage Companies");
-            System.out.println("5. Remove Product");
-            System.out.println("6. Search Product");
-            System.out.println("7. Back to Admin Menu");
+            System.out.println("2. Search Product");
+            System.out.println("3. Add Product");
+            System.out.println("4. Update Product");
+            System.out.println("5. Manage Categories");
+            System.out.println("6. Manage Companies");
+            System.out.println("7. Remove Product");
+            System.out.println("8. Back to Admin Menu");
             
             String choice = context.getScanner().nextLine();
             switch (choice) {
                 case "1": viewProductsHierarchical(); break;
-                case "2": addProductFlow(); break;
-                case "3": manageCategories(); break;
-                case "4": manageCompanies(); break;
-                case "5": removeProduct(); break;
-                case "6": searchProduct(); break;
-                case "7": return;
+                case "2": searchProduct(); break;
+                case "3": addProductFlow(); break;
+                case "4": updateProductFlow(); break;
+                case "5": manageCategories(); break;
+                case "6": manageCompanies(); break;
+                case "7": removeProduct(); break;
+                case "8": return;
                 default: System.out.println("Invalid choice.");
             }
         }
@@ -120,6 +122,163 @@ public class InventoryUI extends BaseUI {
         
         return cats.get(catIdx);
     }
+
+
+    private void updateProductFlow() {
+        System.out.println("\n--- Update Product ---");
+        
+        // First, let user search for the product to update
+        String searchTerm = getStringInput("Enter product name or ID to search: ");
+        if (searchTerm.isEmpty()) {
+            System.out.println("Search term cannot be empty.");
+            return;
+        }
+        
+        // Search for products by name or ID
+        List<Product> searchResults = context.getInventory().getAllProducts().stream()
+            .filter(p -> p.getName().toLowerCase().contains(searchTerm.toLowerCase()) || 
+                        p.getId().equalsIgnoreCase(searchTerm))
+            .collect(Collectors.toList());
+        
+        if (searchResults.isEmpty()) {
+            System.out.println("No products found matching: " + searchTerm);
+            return;
+        }
+        
+        // Display search results
+        System.out.println("\n--- Select Product to Update ---");
+        System.out.printf("%-5s %-20s %-15s %-15s %-10s %-10s\n", "#", "Name", "Category", "Company", "Price", "Stock");
+        System.out.println("--------------------------------------------------------------------------------");
+        
+        for (int i = 0; i < searchResults.size(); i++) {
+            Product p = searchResults.get(i);
+            Category cat = context.getInventory().getCategory(p.getCategoryId());
+            Company comp = context.getInventory().getCompany(p.getCompanyId());
+            String catName = (cat != null) ? cat.getName() : "Unknown";
+            String compName = (comp != null) ? comp.getName() : "Unknown";
+            
+            System.out.printf("%-5d %-20s %-15s %-15s $%-9.2f %-10d\n", 
+                (i + 1), p.getName(), catName, compName, p.getPrice(), p.getStock());
+        }
+        
+        // Select product to update
+        int choice = getIntInput("\nEnter product number to update (0 to cancel): ");
+        if (choice <= 0 || choice > searchResults.size()) {
+            System.out.println("Operation cancelled.");
+            return;
+        }
+        
+        Product selectedProduct = searchResults.get(choice - 1);
+        
+        // Show update options
+        while (true) {
+            System.out.println("\n--- Update Options for: " + selectedProduct.getName() + " ---");
+            System.out.println("Current Price: $" + selectedProduct.getPrice());
+            System.out.println("Current Stock: " + selectedProduct.getStock());
+            System.out.println();
+            System.out.println("1. Update Price");
+            System.out.println("2. Update Stock");
+            System.out.println("3. Update Both Price and Stock");
+            System.out.println("4. Back to Inventory Menu");
+            
+            String updateChoice = context.getScanner().nextLine();
+            switch (updateChoice) {
+                case "1":
+                    updateProductPrice(selectedProduct);
+                    break;
+                case "2":
+                    updateProductStock(selectedProduct);
+                    break;
+                case "3":
+                    updateProductPrice(selectedProduct);
+                    updateProductStock(selectedProduct);
+                    break;
+                case "4":
+                    return;
+                default:
+                    System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+
+    private void updateProductPrice(Product product) {
+        System.out.println("Current Price: $" + product.getPrice());
+        double newPrice = getDoubleInput("Enter new price: $");
+        
+        if (newPrice < 0) {
+            System.out.println("Invalid price.");
+            return;
+        }
+        
+        if (context.getInventory().updateProductPriceById(product.getId(), newPrice)) {
+            System.out.println("Price updated successfully from $" + product.getPrice() + " to $" + newPrice);
+        } else {
+            System.out.println("Failed to update price.");
+        }
+    }
+
+    private void updateProductStock(Product product) {
+        System.out.println("Current Stock: " + product.getStock());
+        System.out.println("1. Set new stock amount");
+        System.out.println("2. Add to existing stock");
+        System.out.println("3. Remove from existing stock");
+        
+        String stockChoice = context.getScanner().nextLine();
+        int newStock = 0;
+        
+        switch (stockChoice) {
+            case "1":
+                newStock = getIntInput("Enter new stock amount: ");
+                if (newStock < 0) {
+                    System.out.println("Invalid stock amount.");
+                    return;
+                }
+                // Set new stock (replace current stock)
+                int currentStock = product.getStock();
+                int stockDifference = newStock - currentStock;
+                if (context.getInventory().updateProductStockById(product.getId(), stockDifference)) {
+                    System.out.println("Stock updated successfully from " + currentStock + " to " + newStock);
+                } else {
+                    System.out.println("Failed to update stock.");
+                }
+                break;
+                
+            case "2":
+                int addAmount = getIntInput("Enter amount to add: ");
+                if (addAmount <= 0) {
+                    System.out.println("Invalid amount.");
+                    return;
+                }
+                if (context.getInventory().updateProductStockById(product.getId(), addAmount)) {
+                    System.out.println("Added " + addAmount + " units. New stock: " + (product.getStock() + addAmount));
+                } else {
+                    System.out.println("Failed to update stock.");
+                }
+                break;
+                
+            case "3":
+                int removeAmount = getIntInput("Enter amount to remove: ");
+                if (removeAmount <= 0) {
+                    System.out.println("Invalid amount.");
+                    return;
+                }
+                if (product.getStock() < removeAmount) {
+                    System.out.println("Cannot remove " + removeAmount + " units. Current stock: " + product.getStock());
+                    return;
+                }
+                if (context.getInventory().updateProductStockById(product.getId(), -removeAmount)) {
+                    System.out.println("Removed " + removeAmount + " units. New stock: " + (product.getStock() - removeAmount));
+                } else {
+                    System.out.println("Failed to update stock.");
+                }
+                break;
+                
+            default:
+                System.out.println("Invalid choice.");
+        }
+    }
+
 
     private String selectOrCreateCompany() {
         List<Company> comps = context.getInventory().getCompanies();

@@ -142,8 +142,8 @@ public class FileManager {
         
         Map<String, Product> productMap = new HashMap<>();
         for (Product p : products) {
-            productMap.put(p.getId(), p); // Map ID -> Product
-            productMap.put(p.getName(), p); // Map Name -> Product (Fall back)
+            productMap.put(p.getId(), p); 
+            productMap.put(p.getName(), p);
         }
 
         Map<String, User> userMap = new HashMap<>();
