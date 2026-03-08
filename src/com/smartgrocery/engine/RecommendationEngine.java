@@ -1,7 +1,6 @@
 package com.smartgrocery.engine;
 
 import com.smartgrocery.inventory.Inventory;
-import com.smartgrocery.models.Category;
 import com.smartgrocery.models.Product;
 import com.smartgrocery.models.Purchase;
 import com.smartgrocery.models.User;
