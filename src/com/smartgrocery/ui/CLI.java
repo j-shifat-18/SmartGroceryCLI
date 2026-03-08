@@ -2,6 +2,7 @@ package com.smartgrocery.ui;
 
 import com.smartgrocery.auth.AuthenticationManager;
 import com.smartgrocery.auth.UserRole;
+import com.smartgrocery.engine.RecommendationEngine;
 import com.smartgrocery.inventory.Inventory;
 import com.smartgrocery.models.User;
 import com.smartgrocery.shopping.Cart;
@@ -28,12 +29,14 @@ public class CLI {
         Inventory inventory = new Inventory(fileManager);
         Cart cart = new Cart();
         Checkout checkout = new Checkout(inventory, fileManager);
+        RecommendationEngine recEngine = new RecommendationEngine(inventory);
+
         
         // Load purchase history
         fileManager.loadPurchases(authManager.getAllUsers(), inventory.getAllProducts());
         
         // Create shared context
-        this.context = new UIContext(scanner, authManager, inventory, cart, checkout);
+        this.context = new UIContext(scanner, authManager, inventory, cart, checkout , recEngine);
         
         // Initialize UI components
         this.authUI = new AuthUI(context);

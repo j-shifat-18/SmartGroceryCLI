@@ -32,7 +32,7 @@ public class CustomerUI extends BaseUI {
                 case "1": browseProducts(); break;
                 case "2": searchProducts(); break;
                 case "3": viewCart(); break;
-                case "4": System.out.println("Feature comming soon!");; break;
+                case "4": viewRecommendations(); break;
                 case "5": viewHistory(); break;
                 case "6": 
                     context.getAuthUI().logout();
@@ -214,6 +214,229 @@ public class CustomerUI extends BaseUI {
             printReceipt(purchase);
         } else {
             System.out.println("Checkout Failed (Stock issues or empty cart).");
+        }
+    }
+
+
+
+     /**
+     * View product recommendations with multiple categories
+     */
+    private void viewRecommendations() {
+        while (true) {
+            System.out.println("\n==== Recommendation Menu ====");
+            System.out.println("1. Best Sellers");
+            System.out.println("2. By Product Category");
+            System.out.println("3. Value for Money");
+            System.out.println("4. Based on Previous Purchases");
+            System.out.println("5. Recently Popular");
+            System.out.println("6. Low Stock / Hurry Deals");
+            System.out.println("7. Budget Friendly Items");
+            System.out.println("0. Back to Main Menu");
+            System.out.print("Select an option: ");
+            
+            String choice = context.getScanner().nextLine();
+            
+            switch (choice) {
+                case "1": showBestSellers(); break;
+                case "2": showByCategory(); break;
+                case "3": showValueForMoney(); break;
+                case "4": showBasedOnPurchases(); break;
+                case "5": showRecentlyPopular(); break;
+                case "6": showLowStock(); break;
+                case "7": showBudgetFriendly(); break;
+                case "0": return;
+                default: System.out.println("Invalid choice.");
+            }
+        }
+    }
+
+
+    /**
+     * 1. Show Best Sellers
+     */
+    private void showBestSellers() {
+        System.out.println("\n--- Best Sellers ---");
+        List<Product> recommendations = context.getRecEngine().recommendBestSellers(10);
+        
+        if (recommendations.isEmpty()) {
+            System.out.println("No purchase data available yet.");
+            return;
+        }
+        
+        System.out.println("Top selling products:");
+        printProductTableWithSelection(recommendations);
+    }
+
+    /**
+     * 2. Show recommendations by category
+     */
+    private void showByCategory() {
+        System.out.println("\n--- Select Category ---");
+        List<Category> categories = context.getInventory().getCategories();
+        
+        if (categories.isEmpty()) {
+            System.out.println("No categories available.");
+            return;
+        }
+        
+        for (int i = 0; i < categories.size(); i++) {
+            System.out.println((i + 1) + ". " + categories.get(i).getName());
+        }
+        System.out.println("0. Back");
+        
+        int choice = getIntInput("Select category: ");
+        if (choice < 1 || choice > categories.size()) return;
+        
+        Category selectedCategory = categories.get(choice - 1);
+        List<Product> recommendations = context.getRecEngine().recommendByCategory(selectedCategory.getId());
+        
+        System.out.println("\n--- " + selectedCategory.getName() + " Recommendations ---");
+        if (recommendations.isEmpty()) {
+            System.out.println("No products available in this category.");
+        } else {
+            printProductTableWithSelection(recommendations);
+        }
+    }
+
+    /**
+     * 3. Show Value for Money products
+     */
+    private void showValueForMoney() {
+        System.out.println("\n--- Best Value Products ---");
+        List<Product> recommendations = context.getRecEngine().recommendValueForMoney(10);
+        
+        if (recommendations.isEmpty()) {
+            System.out.println("No products available.");
+            return;
+        }
+        
+        System.out.println("Products with best prices:");
+        printProductTableWithSelection(recommendations);
+    }
+
+    /**
+     * 5. Show recommendations based on purchase history
+     */
+    private void showBasedOnPurchases() {
+        System.out.println("\n--- Based on Your Purchases ---");
+        
+        if (context.getCurrentUser().getPurchaseHistory().isEmpty()) {
+            System.out.println("No purchase history available. Make a purchase first!");
+            return;
+        }
+        
+        List<Product> recommendations = context.getRecEngine()
+            .recommendByHistory(context.getCurrentUser());
+        
+        if (recommendations.isEmpty()) {
+            System.out.println("No new recommendations available.");
+            return;
+        }
+        
+        System.out.println("You may also like:");
+        printProductTableWithSelection(recommendations);
+    }
+
+    /**
+     * 6. Show Recently Popular products
+     */
+    private void showRecentlyPopular() {
+        System.out.println("\n--- Popular This Week ---");
+        List<Product> recommendations = context.getRecEngine()
+            .recommendRecentlyPopular(context.getAuthManager().getAllUsers(), 10);
+        
+        if (recommendations.isEmpty()) {
+            System.out.println("No recent purchase data available.");
+            return;
+        }
+        
+        System.out.println("Trending products:");
+        printProductTableWithSelection(recommendations);
+    }
+
+    /**
+     * 7. Show Low Stock / Hurry Deals
+     */
+    private void showLowStock() {
+        System.out.println("\n--- Limited Stock Deals ---");
+        List<Product> recommendations = context.getRecEngine().recommendLowStock(10);
+        
+        if (recommendations.isEmpty()) {
+            System.out.println("No limited stock items at the moment.");
+            return;
+        }
+        
+        System.out.println("Hurry! Limited quantities available:");
+        printProductTableWithSelection(recommendations);
+    }
+
+    /**
+     * 8. Show Budget Friendly items
+     */
+    private void showBudgetFriendly() {
+        System.out.print("\nEnter your budget limit (e.g., 100): $");
+        String input = context.getScanner().nextLine();
+        
+        double budget;
+        try {
+            budget = Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            budget = 100.0; // Default
+        }
+        
+        System.out.println("\n--- Budget Friendly Items (Under $" + budget + ") ---");
+        List<Product> recommendations = context.getRecEngine().recommendBudgetFriendly(budget);
+        
+        if (recommendations.isEmpty()) {
+            System.out.println("No products found within your budget.");
+            return;
+        }
+        
+        printProductTableWithSelection(recommendations);
+    }
+
+
+    /**
+     * Print product table with option to add to cart
+     */
+    private void printProductTableWithSelection(List<Product> products) {
+        if (products.isEmpty()) {
+            System.out.println("No products to display.");
+            return;
+        }
+        
+        System.out.printf("\n%-5s %-20s %-15s %-15s %-10s %-10s\n", 
+            "#", "Name", "Category", "Company", "Price", "Stock");
+        System.out.println("--------------------------------------------------------------------------------");
+        
+        for (int i = 0; i < products.size(); i++) {
+            Product p = products.get(i);
+            Category cat = context.getInventory().getCategory(p.getCategoryId());
+            Company comp = context.getInventory().getCompany(p.getCompanyId());
+            String catName = (cat != null) ? cat.getName() : "Unknown";
+            String compName = (comp != null) ? comp.getName() : "Unknown";
+            
+            System.out.printf("%-5d %-20s %-15s %-15s $%-9.2f %-10d\n", 
+                (i + 1), p.getName(), catName, compName, p.getPrice(), p.getStock());
+        }
+        
+        System.out.println("\nEnter product number to add to cart (0 to go back): ");
+        int choice = getIntInput("Choice: ");
+        
+        if (choice > 0 && choice <= products.size()) {
+            Product selectedProduct = products.get(choice - 1);
+            Category cat = context.getInventory().getCategory(selectedProduct.getCategoryId());
+            String unitType = (cat != null) ? cat.getUnitType().toString() : "PCS";
+            
+            int qty = getIntInput("Enter quantity (" + unitType + "): ");
+            if (qty > 0) {
+                context.getCart().addItem(selectedProduct, qty);
+                System.out.println("✓ Added " + qty + " " + unitType + " of " + 
+                    selectedProduct.getName() + " to cart.");
+            } else {
+                System.out.println("Invalid quantity.");
+            }
         }
     }
 
