@@ -36,3 +36,43 @@
 [2026-01-28 12:16:55] LOGIN | didar | User logged in with role: CUSTOMER
 [2026-01-28 12:18:26] LOGOUT | didar | User logged out
 [2026-01-28 12:18:34] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-28 13:03:20] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 13:43:09] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 13:43:14] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-28 13:46:45] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 13:49:29] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-28 13:52:52] LOGOUT | admin | User logged out
+[2026-01-28 13:53:02] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 13:53:31] REGISTER | arafat | New user registered
+[2026-01-28 13:53:49] LOGIN | arafat | User logged in with role: CUSTOMER
+[2026-01-28 13:55:23] LOGOUT | arafat | User logged out
+[2026-01-28 13:55:34] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-28 14:07:04] LOGOUT | admin | User logged out
+[2026-01-28 14:07:42] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 14:07:53] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 14:13:13] LOGIN_FAILED |  | Failed login attempt
+[2026-01-28 14:13:24] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 14:18:27] REGISTER | admin2 | New user registered
+[2026-01-28 14:18:34] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-28 14:18:43] ROLE_UPDATE | SYSTEM | Role updated for user admin2 to: ADMIN
+[2026-01-28 14:18:46] LOGOUT | admin | User logged out
+[2026-01-28 14:18:56] LOGIN | admin2 | User logged in with role: ADMIN
+[2026-01-28 14:18:59] LOGOUT | admin2 | User logged out
+[2026-01-28 14:19:11] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 14:35:18] LOGIN | admin2 | User logged in with role: ADMIN
+[2026-01-28 14:39:51] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 14:46:23] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-28 14:48:31] LOGOUT | admin | User logged out
+[2026-01-28 14:48:39] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 14:54:16] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-01-28 15:16:02] REGISTER | ayman | New user registered
+[2026-01-28 15:16:18] LOGIN_FAILED | aymam | Failed login attempt
+[2026-01-28 15:16:25] LOGIN | ayman | User logged in with role: CUSTOMER
+[2026-01-28 15:17:46] LOGOUT | ayman | User logged out
+[2026-01-28 15:17:52] LOGIN_FAILED | admiin | Failed login attempt
+[2026-01-28 15:17:58] LOGIN | admin | User logged in with role: ADMIN
+[2026-01-28 15:19:20] ROLE_UPDATE | SYSTEM | Role updated for user ayman to: ADMIN
+[2026-01-28 15:19:28] LOGOUT | admin | User logged out
+[2026-03-08 15:13:16] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-03-08 15:13:22] LOGIN | shifat | User logged in with role: CUSTOMER
+[2026-03-08 15:13:26] LOGOUT | shifat | User logged out

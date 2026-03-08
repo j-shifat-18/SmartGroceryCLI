@@ -3,24 +3,20 @@ package com.smartgrocery.ui;
 import com.smartgrocery.auth.UserRole;
 import com.smartgrocery.models.User;
 import com.smartgrocery.utils.ActivityLogger;
+import com.smartgrocery.utils.PasswordInput;
 
-/**
- * Handles authentication-related UI operations
- */
+
 public class AuthUI extends BaseUI {
 
     public AuthUI(UIContext context) {
         super(context);
     }
 
-    /**
-     * Handle user login
-     */
+  
     public User login() {
         System.out.print("Username: ");
         String username = context.getScanner().nextLine();
-        System.out.print("Password: ");
-        String password = context.getScanner().nextLine();
+        String password = PasswordInput.readPassword(context.getScanner(), "Password: ");
         
         User user = context.getAuthManager().login(username, password);
         if (user != null) {
@@ -32,15 +28,21 @@ public class AuthUI extends BaseUI {
         return user;
     }
 
-    /**
-     * Handle user registration
-     */
+  
     public boolean register() {
         System.out.print("Enter username: ");
         String username = context.getScanner().nextLine();
         System.out.println("Password Requirements: " + context.getAuthManager().getPasswordRequirements());
-        System.out.print("Enter password: ");
-        String password = context.getScanner().nextLine();
+        
+        String password = PasswordInput.readPasswordWithConfirmation(
+            context.getScanner(), 
+            "Enter password: ", 
+            "Confirm password: "
+        );
+        
+        if (password == null) {
+            return false; // Passwords didn't match
+        }
         
         if (!context.getAuthManager().isValidPassword(password)) {
             System.out.println("Registration Failed: " + context.getAuthManager().getPasswordRequirements());
@@ -56,7 +58,7 @@ public class AuthUI extends BaseUI {
         }
     }
 
-
+   
     public void logout() {
         if (context.getCurrentUser() != null) {
             String username = context.getCurrentUser().getUsername();
