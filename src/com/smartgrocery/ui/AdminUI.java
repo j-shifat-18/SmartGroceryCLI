@@ -26,7 +26,7 @@ public class AdminUI extends BaseUI {
             switch (choice) {
                 case "1": manageInventory(); break;
                 case "2": manageUsers(); break;
-                case "3": System.out.println("Feature comming soon!");; break;
+                case "3": viewReports(); break;
                 case "4": 
                     context.getAuthUI().logout();
                     return;
