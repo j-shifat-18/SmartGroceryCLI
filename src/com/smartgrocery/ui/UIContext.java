@@ -1,12 +1,14 @@
 package com.smartgrocery.ui;
 
+
 import com.smartgrocery.auth.AuthenticationManager;
+import com.smartgrocery.engine.Analytics;
 import com.smartgrocery.engine.RecommendationEngine;
 import com.smartgrocery.inventory.Inventory;
 import com.smartgrocery.models.User;
 import com.smartgrocery.shopping.Cart;
 import com.smartgrocery.shopping.Checkout;
-
+import com.smartgrocery.storage.FileManager;
 
 import java.util.Scanner;
 
@@ -19,21 +21,25 @@ public class UIContext {
     private final Inventory inventory;
     private final Cart cart;
     private final Checkout checkout;
+    private final Analytics analytics;
+    private final FileManager fileManager;
     private final RecommendationEngine recEngine;
 
     private User currentUser;
     private AuthUI authUI;
 
-    public UIContext(Scanner scanner, AuthenticationManager authManager, Inventory inventory, 
-                    Cart cart, Checkout checkout , RecommendationEngine recEngine) {
+     public UIContext(Scanner scanner, AuthenticationManager authManager, Inventory inventory, 
+                    Cart cart, Checkout checkout, RecommendationEngine recEngine, Analytics analytics,
+                    FileManager fileManager) {
         this.scanner = scanner;
         this.authManager = authManager;
         this.inventory = inventory;
         this.cart = cart;
         this.checkout = checkout;
         this.recEngine = recEngine;
+        this.analytics = analytics;
+        this.fileManager = fileManager;
         this.authUI = new AuthUI(this);
-      
     }
 
     // Getters
@@ -43,6 +49,7 @@ public class UIContext {
     public Cart getCart() { return cart; }
     public Checkout getCheckout() { return checkout; }
     public RecommendationEngine getRecEngine() { return recEngine; }
+    public Analytics getAnalytics() { return analytics; }
     public User getCurrentUser() { return currentUser; }
     public AuthUI getAuthUI() { return authUI; }
     
