@@ -2,8 +2,10 @@ package com.smartgrocery.ui;
 
 import com.smartgrocery.auth.AuthenticationManager;
 import com.smartgrocery.auth.UserRole;
+import com.smartgrocery.engine.Analytics;
 import com.smartgrocery.engine.RecommendationEngine;
 import com.smartgrocery.inventory.Inventory;
+import com.smartgrocery.models.Purchase;
 import com.smartgrocery.models.User;
 import com.smartgrocery.shopping.Cart;
 import com.smartgrocery.shopping.Checkout;
@@ -12,14 +14,16 @@ import com.smartgrocery.utils.ActivityLogger;
 
 import java.util.Scanner;
 
+/**
+ * Main CLI class - now modularized and lightweight
+ */
 public class CLI {
     private final UIContext context;
-    private final AuthUI authUI;
     private final AdminUI adminUI;
     private final CustomerUI customerUI;
 
     public CLI() {
-         
+        // Log system startup
         ActivityLogger.logSystemEvent("STARTUP", "SmartGrocery CLI application started");
         
         // Initialize core components
@@ -28,25 +32,36 @@ public class CLI {
         AuthenticationManager authManager = new AuthenticationManager(fileManager);
         Inventory inventory = new Inventory(fileManager);
         Cart cart = new Cart();
-        Checkout checkout = new Checkout(inventory, fileManager);
         RecommendationEngine recEngine = new RecommendationEngine(inventory);
-
+        Checkout checkout = new Checkout(inventory, fileManager, recEngine);
+        Analytics analytics = new Analytics(inventory);
         
         // Load purchase history
         fileManager.loadPurchases(authManager.getAllUsers(), inventory.getAllProducts());
         
-        // Create shared context
-        this.context = new UIContext(scanner, authManager, inventory, cart, checkout , recEngine);
+        // Initialize recommendation engine with existing purchase data
+        for (User user : authManager.getAllUsers()) {
+            for (Purchase purchase : user.getPurchaseHistory()) {
+                recEngine.trackPurchase(purchase);
+            }
+        }
+        
+        // Create shared context (AuthUI is created inside UIContext now)
+        this.context = new UIContext(scanner, authManager, inventory, cart, checkout, recEngine, analytics, fileManager);
         
         // Initialize UI components
-        this.authUI = new AuthUI(context);
         this.adminUI = new AdminUI(context);
         this.customerUI = new CustomerUI(context);
     }
 
-    //? Start the application
+    
     public void start() {
         System.out.println("Welcome to Smart Grocery CLI!");
+        
+        // Add shutdown hook to log system shutdown
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            ActivityLogger.logSystemEvent("SHUTDOWN", "SmartGrocery CLI application stopped");
+        }));
         
         while (true) {
             showMainMenu();
@@ -57,6 +72,7 @@ public class CLI {
                 case "2": handleRegistration(); break;
                 case "3": 
                     System.out.println("Goodbye!");
+                    ActivityLogger.logSystemEvent("SHUTDOWN", "Application terminated by user");
                     return;
                 default: 
                     System.out.println("Invalid choice.");
@@ -64,7 +80,7 @@ public class CLI {
         }
     }
 
-    
+   
     private void showMainMenu() {
         System.out.println("\n--- Main Menu ---");
         System.out.println("1. Login");
@@ -73,9 +89,9 @@ public class CLI {
         System.out.print("Enter choice: ");
     }
 
-    
+   
     private void handleLogin() {
-        User user = authUI.login();
+        User user = context.getAuthUI().login();
         if (user != null) {
             if (user.getRole() == UserRole.ADMIN) {
                 adminUI.showMenu();
@@ -85,11 +101,12 @@ public class CLI {
         }
     }
 
-   
+
     private void handleRegistration() {
-        authUI.register();
+        context.getAuthUI().register();
     }
 
+  
     public static void main(String[] args) {
         new CLI().start();
     }

@@ -1,5 +1,6 @@
 package com.smartgrocery.shopping;
 
+import com.smartgrocery.engine.RecommendationEngine;
 import com.smartgrocery.inventory.Inventory;
 import com.smartgrocery.models.Product;
 import com.smartgrocery.models.Purchase;
@@ -11,10 +12,12 @@ import java.util.Map;
 public class Checkout {
     private Inventory inventory;
     private FileManager fileManager;
+    private RecommendationEngine recEngine;
 
-    public Checkout(Inventory inventory, FileManager fileManager) {
+    public Checkout(Inventory inventory, FileManager fileManager, RecommendationEngine recEngine) {
         this.inventory = inventory;
         this.fileManager = fileManager;
+        this.recEngine = recEngine;
     }
 
     public Purchase processCheckout(Cart cart, User user) {
@@ -44,10 +47,13 @@ public class Checkout {
         Purchase purchase = new Purchase(Map.copyOf(cart.getItems()), cart.calculateTotal());
         user.addPurchase(purchase);
 
-        // 4. Save to History
+        // 4. Track purchase for recommendations
+        recEngine.trackPurchase(purchase);
+
+        // 5. Save to History
         fileManager.savePurchase(purchase, user);
 
-        // 5. Clear Cart
+        // 6. Clear Cart
         cart.clearCart();
 
         return purchase;
