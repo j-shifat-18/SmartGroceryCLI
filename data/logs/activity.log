@@ -89,3 +89,9 @@
 [2026-03-15 11:06:21] LOGIN | shifat | User logged in with role: CUSTOMER
 [2026-03-15 11:07:11] LOGOUT | shifat | User logged out
 [2026-03-15 11:07:18] LOGIN | admin | User logged in with role: ADMIN
+[2026-03-26 21:32:07] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-03-26 21:32:13] LOGIN | admin | User logged in with role: ADMIN
+[2026-03-26 21:32:24] SHUTDOWN | SYSTEM | SmartGrocery CLI application stopped
+[2026-03-26 21:34:20] STARTUP | SYSTEM | SmartGrocery CLI application started
+[2026-03-26 21:34:28] LOGIN | admin | User logged in with role: ADMIN
+[2026-03-26 21:34:48] SHUTDOWN | SYSTEM | SmartGrocery CLI application stopped
