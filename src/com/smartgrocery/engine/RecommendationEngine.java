@@ -145,12 +145,10 @@ public class RecommendationEngine {
             .collect(Collectors.toList());
     }
 
-    /**
-     * Legacy method - kept for compatibility
-     */
-    public List<Product> recommendBudgetFriendly() {
-        return recommendBudgetFriendly(100.0);
-    }
+    
+    // public List<Product> recommendBudgetFriendly() {
+    //     return recommendBudgetFriendly(100.0);
+    // }
 
     /**
      * Helper method to find product by ID

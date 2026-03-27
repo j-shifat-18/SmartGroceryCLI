@@ -425,7 +425,7 @@ public class CustomerUI extends BaseUI {
      */
     private void showValueForMoney() {
         System.out.println("\n--- Best Value Products ---");
-        List<Product> recommendations = context.getRecEngine().recommendValueForMoney(10);
+        List<Product> recommendations = context.getRecEngine().recommendValueForMoney(5);
         
         if (recommendations.isEmpty()) {
             System.out.println("No products available.");
@@ -465,7 +465,7 @@ public class CustomerUI extends BaseUI {
     private void showRecentlyPopular() {
         System.out.println("\n--- Popular This Week ---");
         List<Product> recommendations = context.getRecEngine()
-            .recommendRecentlyPopular(context.getAuthManager().getAllUsers(), 10);
+            .recommendRecentlyPopular(context.getAuthManager().getAllUsers(), 5);
         
         if (recommendations.isEmpty()) {
             System.out.println("No recent purchase data available.");
