@@ -1,6 +1,5 @@
 package com.smartgrocery.ui;
 
-
 import com.smartgrocery.auth.AuthenticationManager;
 import com.smartgrocery.engine.Analytics;
 import com.smartgrocery.engine.RecommendationEngine;
@@ -21,14 +20,13 @@ public class UIContext {
     private final Inventory inventory;
     private final Cart cart;
     private final Checkout checkout;
+    private final RecommendationEngine recEngine;
     private final Analytics analytics;
     private final FileManager fileManager;
-    private final RecommendationEngine recEngine;
-
     private User currentUser;
-    private AuthUI authUI;
+    private AuthUI authUI; 
 
-     public UIContext(Scanner scanner, AuthenticationManager authManager, Inventory inventory, 
+    public UIContext(Scanner scanner, AuthenticationManager authManager, Inventory inventory, 
                     Cart cart, Checkout checkout, RecommendationEngine recEngine, Analytics analytics,
                     FileManager fileManager) {
         this.scanner = scanner;
@@ -39,7 +37,7 @@ public class UIContext {
         this.recEngine = recEngine;
         this.analytics = analytics;
         this.fileManager = fileManager;
-        this.authUI = new AuthUI(this);
+        this.authUI = new AuthUI(this); // Initialize AuthUI
     }
 
     // Getters
@@ -50,9 +48,10 @@ public class UIContext {
     public Checkout getCheckout() { return checkout; }
     public RecommendationEngine getRecEngine() { return recEngine; }
     public Analytics getAnalytics() { return analytics; }
+    public FileManager getFileManager() { return fileManager; }
     public User getCurrentUser() { return currentUser; }
-    public AuthUI getAuthUI() { return authUI; }
+    public AuthUI getAuthUI() { return authUI; } // Add getter for AuthUI
     
-    // Setters
+  
     public void setCurrentUser(User user) { this.currentUser = user; }
 }

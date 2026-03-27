@@ -3,19 +3,24 @@ package com.smartgrocery.ui;
 import com.smartgrocery.models.*;
 
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-
+/**
+ * Handles customer-specific UI operations
+ */
 public class CustomerUI extends BaseUI {
 
     public CustomerUI(UIContext context) {
         super(context);
     }
 
-    
+    /**
+     * Display customer main menu
+     */
     public void showMenu() {
         while (true) {
             System.out.println("\n--- Customer Menu ---");
@@ -36,14 +41,15 @@ public class CustomerUI extends BaseUI {
                 case "5": viewHistory(); break;
                 case "6": 
                     context.getAuthUI().logout();
-                    context.getCart().clearCart();
                     return;
                 default: System.out.println("Invalid choice.");
             }
         }
     }
 
-    
+    /**
+     * Browse products by category
+     */
     private void browseProducts() {
         List<Category> cats = context.getInventory().getCategories();
         if (cats.isEmpty()) {
@@ -170,7 +176,9 @@ public class CustomerUI extends BaseUI {
         }
     }
 
-    //? View and manage cart
+    /**
+     * View and manage cart
+     */
     private void viewCart() {
         System.out.println("\n--- Your Cart ---");
         if (context.getCart().isEmpty()) {
@@ -217,9 +225,123 @@ public class CustomerUI extends BaseUI {
         }
     }
 
+    /**
+     * Print formatted receipt
+     */
+    private void printReceipt(Purchase p) {
+        System.out.println("\n=========================================");
+        System.out.println("           OFFICIAL RECEIPT              ");
+        System.out.println("=========================================");
+        System.out.println("Receipt ID: " + p.getReceiptId());
+        System.out.println("Date: " + p.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+        System.out.println("-----------------------------------------");
+        System.out.printf("%-20s %-5s %-10s %10s\n", "Item", "Qty", "Unit Price", "Subtotal");
+        
+        for (Map.Entry<Product, Integer> entry : p.getItems().entrySet()) {
+             double unitPrice = entry.getKey().getPrice();
+             int quantity = entry.getValue();
+             double subtotal = unitPrice * quantity;
+             System.out.printf("%-20s %-5d $%-9.2f $%-8.2f\n", 
+                 entry.getKey().getName(), quantity, unitPrice, subtotal);
+        }
+        
+        System.out.println("-----------------------------------------");
+        System.out.printf("TOTAL PAID: %28.2f\n", p.getTotalAmount());
+        System.out.println("=========================================");
+        System.out.println("Save your Receipt ID for future reference!");
+        System.out.println("=========================================\n");
+    }
 
+    /**
+     * View purchase history
+     */
+    private void viewHistory() {
+        System.out.println("\n--- Purchase History ---");
+        List<Purchase> history = context.getCurrentUser().getPurchaseHistory();
+        if (history.isEmpty()) {
+            System.out.println("No purchase history found.");
+            return;
+        }
 
-     /**
+        // Sort by date (newest first)
+        List<Purchase> sortedHistory = new ArrayList<>(history);
+        sortedHistory.sort((p1, p2) -> p2.getTimestamp().compareTo(p1.getTimestamp()));
+
+        // Display purchase dates with receipt IDs
+        System.out.println("\nYour Purchases (sorted by date):");
+        System.out.println("─────────────────────────────────────────────────────────────────");
+        System.out.printf("%-5s %-15s %-25s %-12s %-10s\n", "No.", "Receipt ID", "Date & Time", "Items", "Total");
+        System.out.println("─────────────────────────────────────────────────────────────────");
+        
+        for (int i = 0; i < sortedHistory.size(); i++) {
+            Purchase p = sortedHistory.get(i);
+            int itemCount = p.getItems().values().stream().mapToInt(Integer::intValue).sum();
+            System.out.printf("%-5d %-15s %-25s %-12s $%-9.2f\n", 
+                (i + 1),
+                p.getReceiptId(),
+                p.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")),
+                itemCount + " item(s)",
+                p.getTotalAmount());
+        }
+        System.out.println("─────────────────────────────────────────────────────────────────");
+
+        // Let user select which receipt to view
+        System.out.print("\nEnter purchase number to view detailed receipt (0 to go back): ");
+        String input = context.getScanner().nextLine();
+        
+        try {
+            int choice = Integer.parseInt(input);
+            if (choice > 0 && choice <= sortedHistory.size()) {
+                Purchase selectedPurchase = sortedHistory.get(choice - 1);
+                viewDetailedReceipt(selectedPurchase);
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid input.");
+        }
+    }
+    
+    private void viewDetailedReceipt(Purchase purchase) {
+        System.out.println("\n");
+        
+        // Try to load from file first
+        String receiptContent = context.getFileManager().loadReceipt(purchase.getReceiptId());
+        
+        if (receiptContent != null) {
+            System.out.println(receiptContent);
+        } else {
+            // Fallback: generate receipt on the fly
+            System.out.println("================================================================================");
+            System.out.println("         SMART GROCERY RECEIPT");
+            System.out.println("================================================================================");
+            System.out.println("Receipt ID: " + purchase.getReceiptId());
+            System.out.println("Customer: " + context.getCurrentUser().getUsername());
+            System.out.println("Date: " + purchase.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
+            System.out.println("================================================================================");
+            System.out.println();
+            System.out.printf("%-30s %5s %8s %10s\n", "Item", "Qty", "Price", "Subtotal");
+            System.out.println("--------------------------------------------------------------------------------");
+            
+            for (Map.Entry<Product, Integer> entry : purchase.getItems().entrySet()) {
+                Product p = entry.getKey();
+                int qty = entry.getValue();
+                double subtotal = p.getPrice() * qty;
+                System.out.printf("%-30s %5d $%7.2f $%9.2f\n", 
+                    p.getName().length() > 30 ? p.getName().substring(0, 27) + "..." : p.getName(),
+                    qty, p.getPrice(), subtotal);
+            }
+            
+            System.out.println("================================================================================");
+            System.out.printf("%-30s %5s %8s $%9.2f\n", "TOTAL", "", "", purchase.getTotalAmount());
+            System.out.println("================================================================================");
+            System.out.println("     Thank you for shopping with us!");
+            System.out.println("================================================================================");
+        }
+        
+        System.out.println("\nPress Enter to continue...");
+        context.getScanner().nextLine();
+    }
+
+    /**
      * View product recommendations with multiple categories
      */
     private void viewRecommendations() {
@@ -228,10 +350,11 @@ public class CustomerUI extends BaseUI {
             System.out.println("1. Best Sellers");
             System.out.println("2. By Product Category");
             System.out.println("3. Value for Money");
-            System.out.println("4. Based on Previous Purchases");
-            System.out.println("5. Recently Popular");
-            System.out.println("6. Low Stock / Hurry Deals");
-            System.out.println("7. Budget Friendly Items");
+            System.out.println("4. Frequently Bought Together");
+            System.out.println("5. Based on Previous Purchases");
+            System.out.println("6. Recently Popular");
+            System.out.println("7. Low Stock / Hurry Deals");
+            System.out.println("8. Budget Friendly Items");
             System.out.println("0. Back to Main Menu");
             System.out.print("Select an option: ");
             
@@ -241,16 +364,16 @@ public class CustomerUI extends BaseUI {
                 case "1": showBestSellers(); break;
                 case "2": showByCategory(); break;
                 case "3": showValueForMoney(); break;
-                case "4": showBasedOnPurchases(); break;
-                case "5": showRecentlyPopular(); break;
-                case "6": showLowStock(); break;
-                case "7": showBudgetFriendly(); break;
+                case "4": showFrequentlyBoughtTogether(); break;
+                case "5": showBasedOnPurchases(); break;
+                case "6": showRecentlyPopular(); break;
+                case "7": showLowStock(); break;
+                case "8": showBudgetFriendly(); break;
                 case "0": return;
                 default: System.out.println("Invalid choice.");
             }
         }
     }
-
 
     /**
      * 1. Show Best Sellers
@@ -312,6 +435,29 @@ public class CustomerUI extends BaseUI {
         }
         
         System.out.println("Products with best prices:");
+        printProductTableWithSelection(recommendations);
+    }
+
+    /**
+     * 4. Show Frequently Bought Together
+     */
+    private void showFrequentlyBoughtTogether() {
+        System.out.println("\n--- Frequently Bought Together ---");
+        
+        if (context.getCurrentUser().getPurchaseHistory().isEmpty()) {
+            System.out.println("No purchase history available. Make a purchase first!");
+            return;
+        }
+        
+        List<Product> recommendations = context.getRecEngine()
+            .recommendFrequentlyBoughtTogether(context.getCurrentUser());
+        
+        if (recommendations.isEmpty()) {
+            System.out.println("No recommendations available yet.");
+            return;
+        }
+        
+        System.out.println("Customers who bought your items also bought:");
         printProductTableWithSelection(recommendations);
     }
 
@@ -396,7 +542,6 @@ public class CustomerUI extends BaseUI {
         printProductTableWithSelection(recommendations);
     }
 
-
     /**
      * Print product table with option to add to cart
      */
@@ -439,54 +584,4 @@ public class CustomerUI extends BaseUI {
             }
         }
     }
-
-    /**
-     * Print formatted receipt
-     */
-    private void printReceipt(Purchase p) {
-        System.out.println("\n=========================================");
-        System.out.println("           OFFICIAL RECEIPT              ");
-        System.out.println("=========================================");
-        System.out.println("Date: " + p.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
-        System.out.println("-----------------------------------------");
-        System.out.printf("%-20s %-5s %-10s %10s\n", "Item", "Qty", "Unit Price", "Subtotal");
-        
-        for (Map.Entry<Product, Integer> entry : p.getItems().entrySet()) {
-             double unitPrice = entry.getKey().getPrice();
-             int quantity = entry.getValue();
-             double subtotal = unitPrice * quantity;
-             System.out.printf("%-20s %-5d $%-9.2f $%-8.2f\n", 
-                 entry.getKey().getName(), quantity, unitPrice, subtotal);
-        }
-        
-        System.out.println("-----------------------------------------");
-        System.out.printf("TOTAL PAID: %28.2f\n", p.getTotalAmount());
-        System.out.println("=========================================\n");
-    }
-
-    /**
-     * View purchase history
-     */
-    private void viewHistory() {
-        System.out.println("\n--- Purchase History ---");
-        List<Purchase> history = context.getCurrentUser().getPurchaseHistory();
-        if (history.isEmpty()) {
-            System.out.println("No purchase history found.");
-            return;
-        }
-
-        System.out.printf("%-20s %-30s %-10s\n", "Date", "Items", "Total");
-        System.out.println("-----------------------------------------------------------------");
-        for (Purchase p : history) {
-            StringBuilder itemsStr = new StringBuilder();
-            p.getItems().forEach((prod, qty) -> itemsStr.append(prod.getName()).append("x").append(qty).append(" "));
-            
-            System.out.printf("%-20s %-30s $%-9.2f\n", 
-                p.getTimestamp().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm")),
-                itemsStr.length() > 30 ? itemsStr.substring(0, 27) + "..." : itemsStr.toString(),
-                p.getTotalAmount());
-        }
-    }
-
-   
 }

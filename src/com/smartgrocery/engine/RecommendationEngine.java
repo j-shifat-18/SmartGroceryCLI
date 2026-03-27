@@ -1,6 +1,7 @@
 package com.smartgrocery.engine;
 
 import com.smartgrocery.inventory.Inventory;
+import com.smartgrocery.models.Category;
 import com.smartgrocery.models.Product;
 import com.smartgrocery.models.Purchase;
 import com.smartgrocery.models.User;
@@ -18,9 +19,7 @@ public class RecommendationEngine {
         this.globalPurchaseCount = new HashMap<>();
     }
 
-    /**
-     * Track a purchase for recommendation analytics
-     */
+    
     public void trackPurchase(Purchase purchase) {
         for (Map.Entry<Product, Integer> entry : purchase.getItems().entrySet()) {
             String productId = entry.getKey().getId();
@@ -60,6 +59,43 @@ public class RecommendationEngine {
             .filter(p -> p.getStock() > 0)
             .sorted(Comparator.comparingDouble(Product::getPrice))
             .limit(limit)
+            .collect(Collectors.toList());
+    }
+
+    /**
+     * 4. Frequently Bought Together - Based on purchase patterns
+     */
+    public List<Product> recommendFrequentlyBoughtTogether(User user) {
+        if (user.getPurchaseHistory().isEmpty()) {
+            return new ArrayList<>();
+        }
+
+        // Get products from user's recent purchases
+        Set<String> userProductIds = new HashSet<>();
+        Purchase lastPurchase = user.getPurchaseHistory().get(user.getPurchaseHistory().size() - 1);
+        lastPurchase.getItems().keySet().forEach(p -> userProductIds.add(p.getId()));
+
+        // Find products commonly bought with these items
+        Map<String, Integer> coOccurrence = new HashMap<>();
+        
+        // Simple co-occurrence: products from same category
+        for (String productId : userProductIds) {
+            Product product = findProductById(productId);
+            if (product != null) {
+                inventory.getAllProducts().stream()
+                    .filter(p -> p.getCategoryId().equals(product.getCategoryId()))
+                    .filter(p -> !userProductIds.contains(p.getId()))
+                    .filter(p -> p.getStock() > 0)
+                    .forEach(p -> coOccurrence.put(p.getId(), 
+                        coOccurrence.getOrDefault(p.getId(), 0) + 1));
+            }
+        }
+
+        return coOccurrence.entrySet().stream()
+            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
+            .limit(5)
+            .map(entry -> findProductById(entry.getKey()))
+            .filter(Objects::nonNull)
             .collect(Collectors.toList());
     }
 
@@ -144,6 +180,13 @@ public class RecommendationEngine {
             .filter(p -> p.getStock() > 0)
             .sorted(Comparator.comparingDouble(Product::getPrice))
             .collect(Collectors.toList());
+    }
+
+    /**
+     * Legacy method - kept for compatibility
+     */
+    public List<Product> recommendBudgetFriendly() {
+        return recommendBudgetFriendly(100.0);
     }
 
     /**
