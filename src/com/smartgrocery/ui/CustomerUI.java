@@ -350,11 +350,10 @@ public class CustomerUI extends BaseUI {
             System.out.println("1. Best Sellers");
             System.out.println("2. By Product Category");
             System.out.println("3. Value for Money");
-            System.out.println("4. Frequently Bought Together");
-            System.out.println("5. Based on Previous Purchases");
-            System.out.println("6. Recently Popular");
-            System.out.println("7. Low Stock / Hurry Deals");
-            System.out.println("8. Budget Friendly Items");
+            System.out.println("4. Based on Previous Purchases");
+            System.out.println("5. Recently Popular");
+            System.out.println("6. Low Stock / Hurry Deals");
+            System.out.println("7. Budget Friendly Items");
             System.out.println("0. Back to Main Menu");
             System.out.print("Select an option: ");
             
@@ -364,11 +363,10 @@ public class CustomerUI extends BaseUI {
                 case "1": showBestSellers(); break;
                 case "2": showByCategory(); break;
                 case "3": showValueForMoney(); break;
-                case "4": showFrequentlyBoughtTogether(); break;
-                case "5": showBasedOnPurchases(); break;
-                case "6": showRecentlyPopular(); break;
-                case "7": showLowStock(); break;
-                case "8": showBudgetFriendly(); break;
+                case "4": showBasedOnPurchases(); break;
+                case "5": showRecentlyPopular(); break;
+                case "6": showLowStock(); break;
+                case "7": showBudgetFriendly(); break;
                 case "0": return;
                 default: System.out.println("Invalid choice.");
             }
@@ -435,29 +433,6 @@ public class CustomerUI extends BaseUI {
         }
         
         System.out.println("Products with best prices:");
-        printProductTableWithSelection(recommendations);
-    }
-
-    /**
-     * 4. Show Frequently Bought Together
-     */
-    private void showFrequentlyBoughtTogether() {
-        System.out.println("\n--- Frequently Bought Together ---");
-        
-        if (context.getCurrentUser().getPurchaseHistory().isEmpty()) {
-            System.out.println("No purchase history available. Make a purchase first!");
-            return;
-        }
-        
-        List<Product> recommendations = context.getRecEngine()
-            .recommendFrequentlyBoughtTogether(context.getCurrentUser());
-        
-        if (recommendations.isEmpty()) {
-            System.out.println("No recommendations available yet.");
-            return;
-        }
-        
-        System.out.println("Customers who bought your items also bought:");
         printProductTableWithSelection(recommendations);
     }
 

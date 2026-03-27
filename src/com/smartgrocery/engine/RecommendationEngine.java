@@ -63,43 +63,6 @@ public class RecommendationEngine {
     }
 
     /**
-     * 4. Frequently Bought Together - Based on purchase patterns
-     */
-    public List<Product> recommendFrequentlyBoughtTogether(User user) {
-        if (user.getPurchaseHistory().isEmpty()) {
-            return new ArrayList<>();
-        }
-
-        // Get products from user's recent purchases
-        Set<String> userProductIds = new HashSet<>();
-        Purchase lastPurchase = user.getPurchaseHistory().get(user.getPurchaseHistory().size() - 1);
-        lastPurchase.getItems().keySet().forEach(p -> userProductIds.add(p.getId()));
-
-        // Find products commonly bought with these items
-        Map<String, Integer> coOccurrence = new HashMap<>();
-        
-        // Simple co-occurrence: products from same category
-        for (String productId : userProductIds) {
-            Product product = findProductById(productId);
-            if (product != null) {
-                inventory.getAllProducts().stream()
-                    .filter(p -> p.getCategoryId().equals(product.getCategoryId()))
-                    .filter(p -> !userProductIds.contains(p.getId()))
-                    .filter(p -> p.getStock() > 0)
-                    .forEach(p -> coOccurrence.put(p.getId(), 
-                        coOccurrence.getOrDefault(p.getId(), 0) + 1));
-            }
-        }
-
-        return coOccurrence.entrySet().stream()
-            .sorted(Map.Entry.<String, Integer>comparingByValue().reversed())
-            .limit(5)
-            .map(entry -> findProductById(entry.getKey()))
-            .filter(Objects::nonNull)
-            .collect(Collectors.toList());
-    }
-
-    /**
      * 5. Based on Previous Purchases - Personalized recommendations
      */
     public List<Product> recommendByHistory(User user) {
