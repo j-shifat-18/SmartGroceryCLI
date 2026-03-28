@@ -27,20 +27,6 @@ public class Inventory {
         fileManager.saveProducts(products);
     }
 
-    // public boolean updateProductPrice(String name, double newPrice) { 
-    //     // Note: Name might not be unique anymore across different companies
-    //     // Use exact ID or assume first match for legacy CLI calls?
-    //     // Updating to find by Name but handle ambiguity?
-    //     // For CLI "Admin", maybe search and list variants?
-    //     // For now, simpler: Update first match or specific logic.
-    //     Product p = searchProductByName(name);
-    //     if (p != null) {
-    //         p.setPrice(newPrice);
-    //         fileManager.saveProducts(products);
-    //         return true;
-    //     }
-    //     return false;
-    // }
     
     public boolean updateProductPriceById(String id, double newPrice) {
         Product p = getProductById(id);
