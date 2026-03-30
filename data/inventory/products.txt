@@ -1,8 +1,0 @@
-df19dd25,Milk,2f8080ca,b8d987d9,7.0,25
-0fab0f0b,Apple,dadb2106,c8f9c053,5.0,969
-dcbcbea4,Beef,ab4a8de2,a948f124,2.0,100
-67d22a12,Cumin,34073e6f,a948f124,0.5,711
-4d5e11d5,Orange,dadb2106,2ad4dba9,6.0,76
-e8b9377e,Ginger,34073e6f,51cc7101,7.0,890
-cfdf1f63,Chicken,ab4a8de2,a948f124,8.0,89
-4068e8e8,chicken,34073e6f,c8f9c053,8.0,78

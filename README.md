@@ -1,263 +1,158 @@
-# SmartGroceryCLI Management System
+# SmartGrocery CLI
 
-A comprehensive, enterprise-grade grocery management system built with Java, featuring modular architecture, advanced security, and intuitive command-line interface.
-
-## 🚀 Features
-
-### 🔐 **Security & Authentication**
-- **Advanced Password Security**: SHA-256 hashing with cryptographic salt
-- **Role-Based Access Control**: Admin and Customer user roles
-- **Activity Logging**: Comprehensive audit trail for all user activities
-- **Automatic Migration**: Seamless upgrade from legacy plain-text passwords
-- **Failed Login Tracking**: Security monitoring and breach detection
-
-### 📊 **Inventory Management**
-- **Hierarchical Product Display**: Category → Product → Company variant structure
-- **Complete CRUD Operations**: Create, Read, Update, Delete products
-- **Advanced Search**: Product search by name or ID with partial matching
-- **Stock Management**: Flexible stock operations (set, add, remove)
-- **Price Management**: Dynamic pricing with update history
-- **Low Stock Alerts**: Automated inventory monitoring
-- **Category & Company Management**: Organized product classification
-
-### 🛒 **Shopping Experience**
-- **Intelligent Cart System**: Multi-product cart with quantity management
-- **Product Browsing**: Category-based navigation with variant comparison
-- **Search & Purchase**: Direct add-to-cart from search results
-- **Detailed Receipts**: Unit prices, quantities, and subtotals
-- **Purchase History**: Complete transaction tracking
-- **Smart Recommendations**: History-based and budget-friendly suggestions
-
-### 📈 **Analytics & Reporting**
-- **Sales Analytics**: Most popular products and category revenue
-- **User Behavior Tracking**: Purchase patterns and preferences
-- **Inventory Reports**: Stock levels and movement analysis
-- **Administrative Dashboard**: Comprehensive system overview
-
-## 🏗️ Architecture
-
-### **Modular Design Pattern**
-The system follows clean architecture principles with clear separation of concerns:
-
-```
-src/com/SmartGroceryCLI/
-├── 🎯 models/           # Domain entities and data structures
-├── 🔐 auth/             # Authentication and authorization
-├── 📦 inventory/        # Inventory management logic
-├── 🛒 shopping/         # Cart and checkout functionality
-├── 🧠 engine/           # Analytics and recommendation algorithms
-├── 💾 storage/          # Data persistence layer
-├── 🔧 utils/            # Security and logging utilities
-└── 🖥️ ui/               # Modular user interface components
-    ├── CLI.java              # Application entry point (80 lines)
-    ├── UIContext.java        # Shared context container (40 lines)
-    ├── BaseUI.java           # Common UI utilities (50 lines)
-    ├── AuthUI.java           # Authentication interface (60 lines)
-    ├── AdminUI.java          # Administrative operations (90 lines)
-    ├── InventoryUI.java      # Inventory management (300 lines)
-    └── CustomerUI.java       # Customer shopping interface (280 lines)
-```
-
-### **Data Storage**
-```
-data/
-├── 👥 users/            # User credentials and profiles
-├── 📦 inventory/        # Products, categories, and companies
-├── 💳 transactions/     # Purchase history and receipts
-└── 📋 logs/             # Security and activity audit trails
-```
-
-## 🛠️ Technical Specifications
-
-### **Core Technologies**
-- **Language**: Java 21+ with modern features
-- **Architecture**: Modular monolith with clean separation
-- **Security**: SHA-256 cryptographic hashing
-- **Storage**: File-based persistence with atomic operations
-- **UI**: Advanced command-line interface with input validation
-
-### **Security Features**
-- **Password Hashing**: Industry-standard SHA-256 with random salt
-- **Session Management**: Secure user context handling
-- **Audit Logging**: Comprehensive activity tracking
-- **Error Handling**: Secure error messages without information leakage
-
-### **Performance Optimizations**
-- **Efficient Search**: Optimized product search algorithms
-- **Memory Management**: Minimal memory footprint
-- **File I/O**: Buffered operations for improved performance
-
-## 🚀 Quick Start
-
-### **Prerequisites**
-- Java Development Kit (JDK) 21 or higher
-- Command-line terminal
-- Minimum 512MB RAM
-- 50MB available disk space
-
-### **Installation**
-
-1. **Clone the Repository**
-   ```bash
-   git clone https://github.com/j-shifat-18/SmartGroceryCLI.git
-   cd SmartGroceryCLI
-   ```
-
-2. **Compile the Application**
-   ```bash
-   # Compile all source files
-   find src -name "*.java" -exec javac -cp src {} +
-   
-   # Alternative: Use provided build script
-   ./build.sh
-   ```
-
-3. **Run the Application**
-   ```bash
-   java -cp src com.smartgrocery.ui.CLI
-   ```
-
-### **Default Credentials**
-- **Administrator**: `admin` / `admin123`
-- **Customer**: `customer` / `pass123`
-
-## 📖 User Guide
-
-### **For Administrators**
-
-#### **Inventory Management**
-```bash
-Admin Menu → Manage Inventory
-├── View All Products      # Hierarchical product display
-├── Add Product           # Create new products
-├── Update Product        # Modify price/stock
-├── Manage Categories     # Product categorization
-├── Manage Companies      # Supplier management
-├── Remove Product        # Delete products
-└── Search Product        # Find products by name/ID
-```
-
-#### **User Management**
-```bash
-Admin Menu → Manage Users
-├── View All Users        # User list with roles
-└── Update User Role      # Change user permissions
-```
-
-#### **Analytics & Reports**
-```bash
-Admin Menu → View Reports
-├── Most Bought Items     # Popular product analysis
-├── Category Revenue      # Sales by category
-└── Low Stock Alerts      # Inventory warnings
-```
-
-### **For Customers**
-
-#### **Shopping Experience**
-```bash
-Customer Menu
-├── Browse Products       # Category-based browsing
-├── Search Products       # Find and add to cart
-├── View Cart            # Cart management and checkout
-├── View Recommendations # Personalized suggestions
-└── View History         # Purchase history
-```
-
-## 🔧 Configuration
-
-### **System Settings**
-- **Password Requirements**: 8+ characters, 1+ uppercase letter
-- **Session Timeout**: No automatic timeout (manual logout required)
-- **Log Retention**: Unlimited (manual cleanup required)
-
-### **File Locations**
-- **Application Data**: `./data/`
-- **Activity Logs**: `./data/logs/activity.log`
-- **User Database**: `./data/users/users.txt`
-- **Product Catalog**: `./data/inventory/products.txt`
-
-## 🧪 Testing
-
-### **Unit Testing**
-```bash
-# Run comprehensive test suite
-./run-tests.sh
-
-# Test specific components
-java -cp src:test com.smartgrocery.test.InventoryTest
-java -cp src:test com.smartgrocery.test.AuthenticationTest
-```
-
-### **Integration Testing**
-```bash
-# Test complete user workflows
-./test-workflows.sh
-
-# Manual testing scenarios
-java -cp src com.smartgrocery.ui.CLI
-```
-
-### **Security Testing**
-- Password strength validation
-- SQL injection prevention
-- Authentication bypass attempts
-- Activity logging verification
-
-## 📊 Performance Metrics
-
-### **Scalability**
-- **Products**: Tested with 10,000+ products
-- **Users**: Supports unlimited user accounts
-- **Transactions**: Handles large transaction histories
-- **Categories**: Unlimited hierarchical categories
-
-## 🤝 Contributing
-
-### **Development Setup**
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Follow coding standards and add tests
-4. Commit changes: `git commit -m 'Add amazing feature'`
-5. Push to branch: `git push origin feature/amazing-feature`
-6. Open a Pull Request
-
-### **Coding Standards**
-- **Java Style**: Follow Oracle Java conventions
-- **Documentation**: Comprehensive JavaDoc comments
-- **Testing**: Unit tests for all new features
-- **Security**: Security review for authentication changes
-
-## 📋 Roadmap
-
-### **Version 2.0 (Planned)**
-- [ ] Web-based user interface
-- [ ] Database integration (PostgreSQL/MySQL)
-- [ ] Multi-tenant support
-- [ ] REST API endpoints
-- [ ] Real-time notifications
-- [ ] Advanced analytics dashboard
-
-## 🙏 Acknowledgments
-
-- **Java Community**: For excellent documentation and libraries
-- **Security Experts**: For cryptographic best practices guidance
-- **Open Source Contributors**: For inspiration and code examples
-- **Beta Testers**: For valuable feedback and bug reports
-
-## 📞 Support
-
-### **Documentation**
-- [User Manual](docs/USER_MANUAL.md)
-- [API Documentation](docs/API.md)
-- [Security Guide](SECURITY_FEATURES.md)
-- [Architecture Overview](MODULAR_ARCHITECTURE.md)
-
-### **Community**
-- **Email**: info.jahirulsifat@gmail.com
+A Java-based command-line grocery management system with role-based access, inventory control, shopping cart, and sales analytics.
 
 ---
 
-**SmartGroceryCLI Management System** - Transforming grocery operations with intelligent technology.
+## Features
 
-*Built with ❤️ by the SmartGroceryCLI Team*
+**Authentication & Security**
+- SHA-256 password hashing with cryptographic salt
+- Role-based access control (Admin / Customer)
+- Automatic migration of legacy plain-text passwords
+- Activity logging and failed login tracking
+
+**Inventory Management** *(Admin)*
+- Hierarchical product structure: Category → Product → Company variant
+- Full CRUD for products, categories, and companies
+- Stock and price management
+- Smart low-stock detection based on 7-day sales velocity
+
+**Shopping** *(Customer)*
+- Category-based product browsing with variant comparison
+- Product search with direct add-to-cart
+- Cart management and checkout
+- Itemized receipts saved to file
+- Full purchase history with receipt lookup
+
+**Analytics & Reports** *(Admin)*
+- Most/least sold items
+- Sales by category and top revenue products
+- Daily and weekly sales reports
+- Out-of-stock and low-stock alerts with urgency levels
+
+**Recommendations** *(Customer)*
+- Best sellers, recently popular, value for money
+- History-based and budget-friendly suggestions
+- Limited stock / hurry deals
+
+---
+
+## Project Structure
+
+```
+SmartGroceryCLI/
+├── code/
+│   ├── src/
+│   │   ├── App.java
+│   │   └── com/smartgrocery/
+│   │       ├── auth/          # Authentication & roles
+│   │       ├── engine/        # Analytics & recommendation engine
+│   │       ├── inventory/     # Inventory management
+│   │       ├── models/        # Domain models (Product, User, Purchase, ...)
+│   │       ├── shopping/      # Cart & checkout
+│   │       ├── storage/       # File-based persistence
+│   │       ├── ui/            # CLI interface (Admin, Customer, Auth views)
+│   │       └── utils/         # Password hashing, logging, reporting
+│   ├── bin/                   # Compiled .class files
+│   └── data/
+│       ├── inventory/         # products.txt, categories.txt, companies.txt
+│       ├── users/             # users.txt
+│       ├── transactions/      # purchases.txt
+│       ├── receipts/          # Per-transaction receipt files
+│       └── logs/              # activity.log
+└── doc/                       # Project reports and presentations
+```
+
+---
+
+## Requirements
+
+- Java 11 or higher (tested on OpenJDK 25)
+
+---
+
+## Getting Started
+
+**1. Clone the repository**
+```bash
+git clone https://github.com/j-shifat-18/SmartGroceryCLI.git
+cd SmartGroceryCLI
+```
+
+**2. Compile**
+```bash
+find code/src -name "*.java" | xargs javac -d code/bin -cp code/src
+```
+
+**3. Run** (must run from the `code/` directory so data paths resolve correctly)
+```bash
+cd code
+java -cp bin com.smartgrocery.ui.CLI
+```
+
+---
+
+## Default Credentials
+
+| Username | Password   | Role     |
+|----------|------------|----------|
+| admin    | admin123   | Admin    |
+| customer | pass123    | Customer |
+
+> Passwords are stored as salted SHA-256 hashes. Plain-text passwords are automatically migrated on first login.
+
+---
+
+## Usage
+
+**Admin menu**
+```
+1. Manage Inventory   → Add/update/remove products, categories, companies
+2. Manage Users       → View users, change roles
+3. View Reports       → Sales analytics, low stock alerts, revenue reports
+4. Logout
+```
+
+**Customer menu**
+```
+1. Browse Products    → Navigate by category, compare variants, add to cart
+2. Search Products    → Find by name, add to cart directly
+3. View Cart          → Review items, checkout, clear cart
+4. View Recommendations → Best sellers, budget picks, history-based suggestions
+5. View History       → Past purchases with detailed receipt viewer
+6. Logout
+```
+
+---
+
+## Data Storage
+
+All data is stored as plain-text files under `code/data/`:
+
+| File | Contents |
+|------|----------|
+| `users/users.txt` | `username,hashedPassword,ROLE` |
+| `inventory/products.txt` | `id,name,categoryId,companyId,price,stock` |
+| `inventory/categories.txt` | `id,name,unitType` |
+| `inventory/companies.txt` | `id,name` |
+| `transactions/purchases.txt` | `receiptId;username;timestamp;total;items` |
+| `receipts/RCP-*.txt` | Formatted receipt per transaction |
+| `logs/activity.log` | Timestamped audit trail |
+
+---
+
+## Password Policy
+
+- Minimum 8 characters
+- At least one uppercase letter
+
+---
+
+## License
+
+This project is for educational purposes.
+
+---
+
+*Built by the SmartGrocery team*
